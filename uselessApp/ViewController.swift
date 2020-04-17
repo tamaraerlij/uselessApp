@@ -32,7 +32,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     
     //Outras variáveis
     var entradaDoLabirinto: SCNVector3! 
-    var oLabirinto: criaçãoDoLabirinto!
+    var oLabirinto: CriaçãoDoLabirinto!
     var tempoDeEspera: TimeInterval = 0
     var currentlyOb = false
     var obWarningNode: SCNNode!
