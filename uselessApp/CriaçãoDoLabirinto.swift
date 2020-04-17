@@ -6,74 +6,77 @@
 //  Copyright © 2020 Tamara Erlij. All rights reserved.
 //
 
-import Foundation
-class CriaçãoDoLabirinto {
 
-        let width:Int
-        let length:Int
-        var maze:[[Int]]
-        
-        init(_ width:Int, _ length:Int) {
-            self.width  = width
-            self.length = length
-            let column = [Int](repeating: 0, count: length)
-            self.maze = [[Int]](repeating: column, count: width)
-            generateMaze(0, 0)
-        }
-        
-        private func generateMaze(_ cx:Int, _ cy:Int) {
-            var directions = Direction.allDirections
-            directions.shuffle()
-            for direction in directions {
-                let (dx, dy) = direction.diff
-                let nx = cx + dx
-                let ny = cy + dy
-                if inBounds(nx, ny) && maze[nx][ny] == 0 {
-                    maze[cx][cy] |= direction.rawValue
-                    maze[nx][ny] |= direction.opposite.rawValue
-                    generateMaze(nx, ny)
-                }
+import Foundation
+
+
+
+class CriaçãoDoLabirinto {
+    let width:Int
+    let length:Int
+    var maze:[[Int]]
+    
+    init(_ width:Int, _ length:Int) {
+        self.width  = width
+        self.length = length
+        let column = [Int](repeating: 0, count: length)
+        self.maze = [[Int]](repeating: column, count: width)
+        generateMaze(0, 0)
+    }
+    
+    private func generateMaze(_ cx:Int, _ cy:Int) {
+        var directions = Direction.allDirections
+        directions.shuffle()
+        for direction in directions {
+            let (dx, dy) = direction.diff
+            let nx = cx + dx
+            let ny = cy + dy
+            if inBounds(nx, ny) && maze[nx][ny] == 0 {
+                maze[cx][cy] |= direction.rawValue
+                maze[nx][ny] |= direction.opposite.rawValue
+                generateMaze(nx, ny)
             }
-        }
-        
-        private func inBounds(_ testWidth:Int, _ testLength:Int) -> Bool {
-            return inBounds(value:testWidth, upper:self.width) && inBounds(value:testLength, upper:self.length)
-        }
-        
-        private func inBounds(value:Int, upper:Int) -> Bool {
-            return (value >= 0) && (value < upper)
-        }
-        
-        func displayInts() {
-            for j in 0..<length {
-                var line = ""
-                for i in 0..<width {
-                    line += String(maze[i][j]) + "\t"
-                }
-                print(line)
-            }
-        }
-        
-        func displayDirections() {
-            for j in 0..<length {
-                var line = ""
-                for i in 0..<width {
-                    line += getDirectionsAsString(maze[i][j]) + "\t"
-                }
-                print(line)
-            }
-        }
-        
-        private func getDirectionsAsString(_ value:Int) -> String {
-            var line = ""
-            for direction in Direction.allDirections {
-                if (value & direction.rawValue) != 0 {
-                    line += direction.char
-                }
-            }
-            return line
         }
     }
+    
+    private func inBounds(_ testWidth:Int, _ testLength:Int) -> Bool {
+        return inBounds(value:testWidth, upper:self.width) && inBounds(value:testLength, upper:self.length)
+    }
+    
+    private func inBounds(value:Int, upper:Int) -> Bool {
+        return (value >= 0) && (value < upper)
+    }
+    
+    func displayInts() {
+        for j in 0..<length {
+            var line = ""
+            for i in 0..<width {
+                line += String(maze[i][j]) + "\t"
+            }
+            print(line)
+        }
+    }
+    
+    func displayDirections() {
+        for j in 0..<length {
+            var line = ""
+            for i in 0..<width {
+                line += getDirectionsAsString(maze[i][j]) + "\t"
+            }
+            print(line)
+        }
+    }
+    
+    private func getDirectionsAsString(_ value:Int) -> String {
+        var line = ""
+        for direction in Direction.allDirections {
+            if (value & direction.rawValue) != 0 {
+                line += direction.char
+            }
+        }
+        return line
+    }
+}
 
 extension Array {
     mutating func swap(_ index1:Int, _ index2:Int) {
@@ -141,4 +144,3 @@ enum Direction:Int {
     }
     
 }
-
