@@ -10,24 +10,38 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate {
+class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
+      //MARK: Propriedades do labirinto
+    //Só será verdadeira quando o usuário tocar na tela
+    var labirintoIsSetUp = false
+    
+    //Distância da esquerda para a direita
+    var larguraDoLabirinto: Float = 11.0
+    
+    //Profundidade
+    var comprimentoDoLabirinto: Float = 11.0
+    
+    //Altura
+    var alturaDoLabirinto: Float = 2.0
+    
+    // Largura de cada parede, tal que tanto a largura e o comprimento do labirinto devem ser proporcionais.
+    var comprimentoPorUnidade: Float = 1.0
+    
+    //Outras variáveis
+    var oLabirinto: criaçãoDoLabirinto!
+    var tempoDeEspera: TimeInterval = 0
+    var currentlyOb = false
+    var obWarningNode: SCNNode!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Set the view's delegate
         sceneView.delegate = self
-        
-        // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
-        
-        // Create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        sceneView.scene = scene
+        sceneView.scene.physicsWorld.contactDelegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,30 +60,23 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Pause the view's session
         sceneView.session.pause()
     }
-
-    // MARK: - ARSCNViewDelegate
-    
-/*
-    // Override to create and configure nodes for anchors added to the view's session.
-    func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        let node = SCNNode()
-     
-        return node
-    }
-*/
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
-        
     }
     
     func sessionWasInterrupted(_ session: ARSession) {
         // Inform the user that the session has been interrupted, for example, by presenting an overlay
-        
     }
     
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
-        
+    }
+}
+
+extension float4x4 {
+    var translation:  SIMD3<Float> {
+        let translation = self.columns.3
+        return SIMD3<Float>(translation.x, translation.y, translation.z)
     }
 }
