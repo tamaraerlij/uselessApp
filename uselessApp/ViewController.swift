@@ -80,6 +80,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
                return
            }
     }
+
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
            print("contact")
            currentlyOb = true
