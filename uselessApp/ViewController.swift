@@ -31,6 +31,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
     var comprimentoPorUnidade: Float = 1.0
     
     //Outras variáveis
+    var entradaDoLabirinto: SCNVector3! 
     var oLabirinto: criaçãoDoLabirinto!
     var tempoDeEspera: TimeInterval = 0
     var currentlyOb = false
@@ -60,6 +61,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
         // Pause the view's session
         sceneView.session.pause()
     }
+       func addPillar(xPos: Float, zPos: Float) {
+           let pillar = SCNBox(width: 0.1, height: CGFloat(alturaDoLabirinto), length: 0.1, chamferRadius: 0)
+           
+           // adicionando a textura para cada pilar
+           let pillarTexture = UIImage(named: "paredeRosa")
+           let pillarMaterial = SCNMaterial()
+           pillarMaterial.diffuse.contents = pillarTexture
+           pillarMaterial.isDoubleSided = true
+           pillar.materials = [pillarMaterial]
+           
+           let pillarNode = SCNNode()
+           pillarNode.geometry = pillar
+           pillarNode.position = SCNVector3(xPos, entradaDoLabirinto.y + (alturaDoLabirinto/2), zPos)
+           
+           sceneView.scene.rootNode.addChildNode(pillarNode)
+       }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
