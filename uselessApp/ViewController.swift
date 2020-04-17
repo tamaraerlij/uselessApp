@@ -78,6 +78,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
            sceneView.scene.rootNode.addChildNode(pillarNode)
        }
     
+    func addWall(width: Float, length: Float, xPos: Float, zPos: Float) {
+        let wall = SCNBox(width: CGFloat(width), height: CGFloat(alturaDoLabirinto), length: CGFloat(length), chamferRadius: 0)
+        
+        // textura para a parede
+        let wallTexture = UIImage(named: "paredeRosa")
+        let wallMaterial = SCNMaterial()
+        wallMaterial.diffuse.contents = wallTexture
+        wallMaterial.isDoubleSided = true
+        wall.materials = [wallMaterial]
+
+        let wallNode = SCNNode()
+        wallNode.geometry = wall
+        
+        wallNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
+        wallNode.physicsBody?.categoryBitMask = CategoriaFísica.WallOrPillar
+        wallNode.physicsBody?.contactTestBitMask = CategoriaFísica.Camera
+        wallNode.physicsBody?.collisionBitMask = CategoriaFísica.None
+        
+        wallNode.position = SCNVector3(xPos, entradaDoLabirinto.y + (alturaDoLabirinto/2), zPos)
+
+        sceneView.scene.rootNode.addChildNode(wallNode)
+    }
+    
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
     }
