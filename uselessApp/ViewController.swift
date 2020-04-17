@@ -17,13 +17,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDele
       //MARK: Propriedades do labirinto
     //Só será verdadeira quando o usuário tocar na tela
     var labirintoIsSetUp = false
+    
     //Distância da esquerda para a direita
-     var larguraDoLabirinto: Float = 11.0
-    //Produndidade
-     var comprimentoDoLabirinto: Float = 11.0
-     var alturaDoLabirinto: Float = 2.0
+    var larguraDoLabirinto: Float = 11.0
+    
+    //Profundidade
+    var comprimentoDoLabirinto: Float = 11.0
+    
+    //Altura
+    var alturaDoLabirinto: Float = 2.0
+    
     // Largura de cada parede, tal que tanto a largura e o comprimento do labirinto devem ser proporcionais.
     var comprimentoPorUnidade: Float = 1.0
+    
+    //Outras variáveis
+    var oLabirinto: criaçãoDoLabirinto!
+    var tempoDeEspera: TimeInterval = 0
+    var currentlyOb = false
+    var obWarningNode: SCNNode!
+    
                                  
      
     
