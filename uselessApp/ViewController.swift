@@ -128,7 +128,7 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
             case 0:
                 updateAntartidaSmoothWallPaper()
             case 1:
-                updateMilkyWayWallPaper()
+                updateBeachWallPaper()
     
             default:
                 break
@@ -161,22 +161,23 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
         }
         
   
-        func updateMilkyWayWallPaper() {
+        func updateBeachWallPaper() {
             for node in PortalNodes.allCases {
                 if node == .backA {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayBackA)
+                  
+                    updateBeachWallPaper(node: node, with: .beachBackA)
                 } else if node == .backC {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayBackC)
+                    updateBeachWallPaper(node: node, with: .beachBackC)
                 } else if node == .bottom {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayBottom)
+                    updateBeachWallPaper(node: node, with: .beachBottom)
                 } else if node == .front {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayFront)
+                    updateBeachWallPaper(node: node, with: .beachFront)
                 }  else if node == .left {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayLeft)
+                    updateBeachWallPaper(node: node, with: .beachLeft)
                 } else if node == .right {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayRight)
+                    updateBeachWallPaper(node: node, with: .beachRight)
                 } else if node == .top {
-                    updateMilkyWayWallPaper(node: node, with: .milkyWayTop)
+                    updateBeachWallPaper(node: node, with: .beachTop)
                 }
             }
         }
@@ -190,7 +191,7 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
             }
         }
 //
-        func updateMilkyWayWallPaper(node: PortalNodes, with wallPaperName: MilkyWay) {
+        func updateBeachWallPaper(node: PortalNodes, with wallPaperName: Beach) {
             let child = portalNode?.childNode(withName: node.rawValue, recursively: true)
             child?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "Portal.scnassets/\(wallPaperName.rawValue).png")
             child?.renderingOrder = 200
@@ -202,14 +203,14 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
     }
 
     //MARK: Environment Enums
-    enum MilkyWay: String, CaseIterable {
-        case milkyWayBackA
-        case milkyWayBackC
-        case milkyWayBottom
-        case milkyWayFront
-        case milkyWayLeft
-        case milkyWayRight
-        case milkyWayTop
+    enum Beach: String, CaseIterable {
+        case beachBackA
+        case beachBackC
+        case beachBottom
+        case beachFront
+        case beachLeft
+        case beachRight
+        case beachTop
     }
 
 
