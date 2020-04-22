@@ -1,26 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8VG-YW-edw">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tXr-a1-R10">
+        <!--Onboarding Page View Controller-->
+        <scene sceneID="8Hq-IA-uGF">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="ViewController" customModule="uselessApp" customModuleProvider="target" sceneMemberID="viewController">
-                    <arscnView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3lk-jd-MrM">
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="cK4-GU-rb2" customClass="OnboardingPageViewController" customModule="uselessApp" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="amB-nJ-IBX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2003" y="110"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="chW-JI-3Nu">
+            <objects>
+                <viewController storyboardIdentifier="OnboardingViewController1" id="YcU-qd-cPa" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fz5-gB-uOd">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="beachRight.png" translatesAutoresizingMaskIntoConstraints="NO" id="4Xa-ag-va6">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="4Xa-ag-va6" secondAttribute="bottom" id="5Gq-bI-yHR"/>
+                            <constraint firstItem="4Xa-ag-va6" firstAttribute="leading" secondItem="igc-E0-oTs" secondAttribute="leading" id="XNs-vC-Zpj"/>
+                            <constraint firstItem="4Xa-ag-va6" firstAttribute="trailing" secondItem="igc-E0-oTs" secondAttribute="trailing" id="cnk-Pj-g3C"/>
+                            <constraint firstItem="4Xa-ag-va6" firstAttribute="top" secondItem="fz5-gB-uOd" secondAttribute="top" id="dV8-Gs-fEr"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="igc-E0-oTs"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZbG-fZ-BAk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="110.14492753623189" y="860.49107142857144"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="khS-hP-jH8">
+            <objects>
+                <viewController storyboardIdentifier="OnboardingViewController2" id="V0N-Wb-VYW" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="76w-AM-JJB">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="beachRight.png" translatesAutoresizingMaskIntoConstraints="NO" id="aV0-6h-Mkc">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="aV0-6h-Mkc" firstAttribute="top" secondItem="76w-AM-JJB" secondAttribute="top" id="90X-wO-Rex"/>
+                            <constraint firstItem="aV0-6h-Mkc" firstAttribute="leading" secondItem="dLf-1c-bpF" secondAttribute="leading" id="V5u-IY-61j"/>
+                            <constraint firstItem="aV0-6h-Mkc" firstAttribute="trailing" secondItem="dLf-1c-bpF" secondAttribute="trailing" id="fCO-tu-d6E"/>
+                            <constraint firstAttribute="bottom" secondItem="aV0-6h-Mkc" secondAttribute="bottom" id="yrq-kj-JW9"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="dLf-1c-bpF"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aML-0I-rSq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="807" y="860"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="cm6-aC-tKY">
+            <objects>
+                <viewController storyboardIdentifier="OnboardingViewController3" id="UKW-7J-Thj" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Bm6-Z9-SgS">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="beachRight.png" translatesAutoresizingMaskIntoConstraints="NO" id="5XI-g7-AeN">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="5XI-g7-AeN" firstAttribute="leading" secondItem="11s-fv-Ibx" secondAttribute="leading" id="8Hx-K7-cFD"/>
+                            <constraint firstItem="5XI-g7-AeN" firstAttribute="top" secondItem="Bm6-Z9-SgS" secondAttribute="top" id="Nhl-Jd-oLS"/>
+                            <constraint firstAttribute="bottom" secondItem="5XI-g7-AeN" secondAttribute="bottom" id="VMQ-f3-Bc4"/>
+                            <constraint firstItem="5XI-g7-AeN" firstAttribute="trailing" secondItem="11s-fv-Ibx" secondAttribute="trailing" id="YAq-rY-2RP"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="11s-fv-Ibx"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SN3-HN-zYd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1509" y="860"/>
+        </scene>
+        <!--Labirinto View Controller-->
+        <scene sceneID="hfs-vQ-f0p">
+            <objects>
+                <viewController id="jKt-gF-eMS" customClass="LabirintoViewController" customModule="uselessApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <arscnView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="cEt-Mu-OKH">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </arscnView>
+                    <navigationItem key="navigationItem" id="Ixs-vk-GIK"/>
                     <connections>
-                        <outlet property="sceneView" destination="3lk-jd-MrM" id="Qqu-tA-3bh"/>
+                        <outlet property="sceneView" destination="cEt-Mu-OKH" id="Kj9-Vx-ylr"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3sc-1o-p4Q" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="94"/>
+            <point key="canvasLocation" x="1387" y="95"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Wsa-Fi-53C">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="8VG-YW-edw" customClass="ViewController" customModule="uselessApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="JzO-WB-7nz">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Wq-yL-d6N">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </arscnView>
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="AyG-FR-sYm">
+                                <rect key="frame" x="20" y="756" width="374" height="32"/>
+                                <segments>
+                                    <segment title="Antártida"/>
+                                    <segment title="Praia"/>
+                                </segments>
+                                <connections>
+                                    <action selector="indexChanged:" destination="8VG-YW-edw" eventType="valueChanged" id="Uq9-Kt-HJF"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="2Wq-yL-d6N" firstAttribute="trailing" secondItem="PbK-Rj-k8D" secondAttribute="trailing" id="1d9-Rd-4Zd"/>
+                            <constraint firstItem="PbK-Rj-k8D" firstAttribute="bottom" secondItem="AyG-FR-sYm" secondAttribute="bottom" constant="75" id="7Un-uE-o3O"/>
+                            <constraint firstItem="AyG-FR-sYm" firstAttribute="leading" secondItem="JzO-WB-7nz" secondAttribute="leading" constant="20" id="Njv-Wt-zgc"/>
+                            <constraint firstItem="AyG-FR-sYm" firstAttribute="centerX" secondItem="PbK-Rj-k8D" secondAttribute="centerX" id="OBQ-oz-9cv"/>
+                            <constraint firstItem="2Wq-yL-d6N" firstAttribute="top" secondItem="JzO-WB-7nz" secondAttribute="top" id="OOK-0K-RHn"/>
+                            <constraint firstItem="2Wq-yL-d6N" firstAttribute="leading" secondItem="PbK-Rj-k8D" secondAttribute="leading" id="T28-qx-37D"/>
+                            <constraint firstAttribute="bottom" secondItem="2Wq-yL-d6N" secondAttribute="bottom" id="mfH-5u-Exa"/>
+                            <constraint firstAttribute="trailing" secondItem="AyG-FR-sYm" secondAttribute="trailing" constant="20" id="vea-Oi-TYV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="PbK-Rj-k8D"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="GmF-uZ-c6X"/>
+                    <connections>
+                        <outlet property="sceneView" destination="2Wq-yL-d6N" id="zq4-As-RVR"/>
+                        <outlet property="segmentedControl" destination="AyG-FR-sYm" id="8hC-VI-Lqx"/>
+                        <segue destination="g6c-AM-ZVj" kind="show" identifier=" toOnboarding" id="1g9-YG-TYt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="a83-z7-DRc" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="110" y="110"/>
+        </scene>
+        <!--Onboarding View Controller-->
+        <scene sceneID="i8Z-LV-zyr">
+            <objects>
+                <viewController storyboardIdentifier="OnboardingViewController" modalPresentationStyle="fullScreen" id="g6c-AM-ZVj" customClass="OnboardingViewController" customModule="uselessApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="HnS-oi-1sR">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bxT-Lf-bJ5">
+                                <rect key="frame" x="20" y="64" width="374" height="738"/>
+                                <connections>
+                                    <segue destination="cK4-GU-rb2" kind="embed" id="ZIv-96-8nG"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="QPZ-4q-kjM" firstAttribute="bottom" secondItem="bxT-Lf-bJ5" secondAttribute="bottom" constant="60" id="IOi-bh-IAW"/>
+                            <constraint firstItem="bxT-Lf-bJ5" firstAttribute="leading" secondItem="QPZ-4q-kjM" secondAttribute="leading" constant="20" id="f3t-Eh-V8z"/>
+                            <constraint firstItem="bxT-Lf-bJ5" firstAttribute="top" secondItem="QPZ-4q-kjM" secondAttribute="top" constant="20" id="fQT-zy-yjm"/>
+                            <constraint firstItem="QPZ-4q-kjM" firstAttribute="trailing" secondItem="bxT-Lf-bJ5" secondAttribute="trailing" constant="20" id="qnr-s5-M3J"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="QPZ-4q-kjM"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="tE7-U3-XJq"/>
+                    <connections>
+                        <segue destination="8VG-YW-edw" kind="show" identifier="toMain" id="1ci-3W-TRM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YfT-OG-MWR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-967" y="122"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="beachRight.png" width="370" height="336"/>
+    </resources>
 </document>
