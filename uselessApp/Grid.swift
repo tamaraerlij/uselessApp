@@ -6,6 +6,7 @@
 //  Copyright © 2020 Tamara Erlij. All rights reserved.
 //
 
+
 import Foundation
 import SceneKit
 import ARKit
@@ -38,7 +39,7 @@ class Grid : SCNNode {
         planeGeometry = SCNPlane(width: CGFloat(self.anchor.extent.x), height: CGFloat(self.anchor.extent.z))
         
         let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named:"Portal.scnassets/cliqueAquiGrid2.png")
+        material.diffuse.contents = UIImage(named:"Portal.scnassets/overlay_grid.png")
         
         planeGeometry.materials = [material]
         let planeNode = SCNNode(geometry: self.planeGeometry)

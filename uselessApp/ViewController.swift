@@ -1,249 +1,235 @@
 //
-//  ViewController.swift
+//  ARViewController.swift
 //  uselessApp
 //
-//  Created by Tamara Erlij on 17/04/20.
+//  Created by Tamara Erlij on 21/04/20.
 //  Copyright © 2020 Tamara Erlij. All rights reserved.
 //
 
 import UIKit
-import SceneKit
 import ARKit
+import AVFoundation
 
-class ViewController: UIViewController, ARSCNViewDelegate, SCNPhysicsContactDelegate {
-
-    @IBOutlet var sceneView: ARSCNView!
+class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate {
+ 
+    @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-      //MARK: Propriedades do labirinto
-    //Só será verdadeira quando o usuário tocar na tela
-    var labirintoIsSetUp = false
-    
-    //Distância da esquerda para a direita
-    var larguraDoLabirinto: Float = 11.0
-    
-    //Profundidade
-    var comprimentoDoLabirinto: Float = 11.0
-    
-    //Altura
-    var alturaDoLabirinto: Float = 2.0
-    
-    // Largura de cada parede, tal que tanto a largura e o comprimento do labirinto devem ser proporcionais.
-    var comprimentoPorUnidade: Float = 1.0
-    
-    //Outras variáveis
-    var entradaDoLabirinto: SCNVector3! 
-    var oLabirinto: CriaçãoDoLabirinto!
-    var tempoDeEspera: TimeInterval = 0
-    var currentlyOb = false
-    var obWarningNode: SCNNode!
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        sceneView.scene.physicsWorld.contactDelegate = self
+    let configuration = ARWorldTrackingConfiguration()
+        var audioPlayer: AVAudioPlayer?
+        var grids = [Grid]()
+        var portalNode: SCNNode?
         
-        // Alerta em vermelho
-         let obWarning = SCNBox(width: 0.1, height: 0.3, length: 0.1, chamferRadius: 0)
-         let color = UIColor.red
-         obWarning.materials.first?.diffuse.contents = color
-         obWarningNode = SCNNode(geometry: obWarning)
-         obWarningNode.position = SCNVector3Make(0, 0, -0.1)
-         sceneView.pointOfView?.addChildNode(obWarningNode)
-         
-         addTapGestureToSceneView()
+        //MARK: LifeCycle & Initialization
+        override func viewDidLoad() {
+            super.viewDidLoad()
+            setupView()
+            sceneView.debugOptions = [SCNDebugOptions.showFeaturePoints]
+            configuration.planeDetection = .horizontal
+            sceneView.session.run(configuration)
+            sceneView.delegate = self
+            
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
+            sceneView.addGestureRecognizer(tapGestureRecognizer)
+        }
+                
+        @objc func tapped(sender: UITapGestureRecognizer) {
+            // Get 2D position of touch event on screen
+            guard let sceneView = sender.view as? ARSCNView else {return}
+            let touchLocation = sender.location(in: sceneView)
+            
+            let hitTestResults = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
+            
+            
+            if !hitTestResults.isEmpty {
+                // Get hitTest results and ensure that the hitTest corresponds to a grid that has been placed on a wall
+                guard let hitTest = hitTestResults.first, let anchor = hitTest.anchor as? ARPlaneAnchor, let _ = grids.index(where: { $0.anchor == anchor }) else {
+                    return
+                }
+                
+                configuration.planeDetection = []
+                sceneView.debugOptions = []
+                sceneView.isUserInteractionEnabled = false
+                sceneView.session.run(configuration)
+                
+                segmentedControl.isHidden = false
+                
+                _ = grids.map { $0.removeFromParentNode() }
+                
+                addPortal(hitTestResult: hitTest)
+            } else {
+                //do nothing
+            }
+        }
         
-         oLabirinto = CriaçãoDoLabirinto(Int(larguraDoLabirinto/comprimentoPorUnidade), Int(comprimentoDoLabirinto/comprimentoPorUnidade))
-    }
-    func addTapGestureToSceneView() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ViewController.didTap(withGestureRecognizer:)))
-        sceneView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    @objc func didTap(withGestureRecognizer recognizer: UIGestureRecognizer) {
-           let tapLocation = recognizer.location(in: sceneView)
-           let hitTestResults = sceneView.hitTest(tapLocation)
+        //MARK: Setup View
+        func setupView() {
+            let normalTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            let selectedTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black]
+            segmentedControl.setTitleTextAttributes(normalTextAttributes, for: .normal)
+            segmentedControl.setTitleTextAttributes(selectedTextAttributes, for: .selected)
+        }
+            
+        //MARK: Start Music
+        func startMusic() {
+            let soundURL = Bundle.main.url(forResource: K.ambient, withExtension: K.mp3 )
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: soundURL!)
+                audioPlayer?.numberOfLoops = -1
+                audioPlayer?.play()
+            }
+            catch {
+                print(error)
+            }
+        }
+        
+        //MARK: Portal Methods
+        func addPortal(hitTestResult: ARHitTestResult) {
+            let portalScene = SCNScene(named: K.portalPath)
+            portalNode = portalScene!.rootNode.childNode(withName: K.portal, recursively: false)!
+            let transform = hitTestResult.worldTransform
+            let planeXposition = transform.columns.3.x
+            let planeYposition = transform.columns.3.y
+            let planeZposition = transform.columns.3.z
+            portalNode?.position =  SCNVector3(planeXposition, planeYposition, planeZposition)
+            
+            if let portalNode = portalNode {
+                sceneView.scene.rootNode.addChildNode(portalNode)
+                startMusic()
+                updateAntartidaSmoothWallPaper()
+            } else {
+                return
+            }
+        }
+        
+        //MARK: ARSCNViewDelegate Methods
+        func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+            let grid = Grid(anchor: planeAnchor)
+            grids.append(grid)
+            node.addChildNode(grid)
+        }
+        
+        func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+            guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
+            let grid = self.grids.filter { grid in
+                return grid.anchor.identifier == planeAnchor.identifier
+            }.first
+            
+            guard let foundGrid = grid else {
+                return
+            }
+            
+            foundGrid.update(anchor: planeAnchor)
+        }
+        
+        @IBAction func indexChanged(_ sender: Any) {
+            switch segmentedControl.selectedSegmentIndex {
+            case 0:
+                updateAntartidaSmoothWallPaper()
+            case 1:
+                updateMilkyWayWallPaper()
+    
+            default:
+                break
+            }
+        }
+    
 
-               guard let node = hitTestResults.first?.node else {
-               if labirintoIsSetUp == false {
-                   let hitTestResultsWithFeaturePoints = sceneView.hitTest(tapLocation, types: .featurePoint)
-                   
-                if let hitTestResultWithFeaturePoints = hitTestResultsWithFeaturePoints.first {
-                       let translation = hitTestResultWithFeaturePoints.worldTransform.translation
-                       entradaDoLabirinto = SCNVector3(x: translation.x, y: translation.y, z: translation.z)
-                       setUpMaze() // sets up maze once maze entrance has been positioned
-                       
-                       // for manually-created maze (currently not in use)
-                       // buildMaze()
-                   }
-               }
-               return
-           }
-    }
+        //MARK: Update Environment
+        func updateAntartidaSmoothWallPaper() {
+            for node in PortalNodes.allCases {
+                if node == .backA {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothBackA)
+                }
 
-    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-           print("contact")
-           currentlyOb = true
-       }
-       
-       func setUpMaze() {
-           
-           // determines position of top-left point of maze
-           let topLeftPos = SCNVector3(entradaDoLabirinto.x - larguraDoLabirinto/2, entradaDoLabirinto.y, entradaDoLabirinto.z - comprimentoDoLabirinto)
-           
-           for j in 0..<Int(comprimentoDoLabirinto/comprimentoPorUnidade) {
-               // builds walls for top-edges of each maze-cell (if there is supposed to be a wall there)
-               for i in 0..<oLabirinto.width {
-                   addPillar(xPos: topLeftPos.x + Float(i)*comprimentoPorUnidade, zPos: topLeftPos.z + Float(j)*comprimentoPorUnidade)
-                   if (j == 0) { // these few lines ensure no wall is built where exit is supposed to be
-                       if (i != (Int(larguraDoLabirinto/comprimentoPorUnidade)) / 2) {
-                           if (oLabirinto.maze[i][j] & Direction.north.rawValue) == 0 {
-                               addWall(width: comprimentoPorUnidade-0.1, length: 0.1, xPos: topLeftPos.x + 0.5*comprimentoPorUnidade + Float(i)*comprimentoPorUnidade, zPos: topLeftPos.z + Float(j)*comprimentoPorUnidade)
-                           }
-                       }
-                   }
-                   else {
-                       if (oLabirinto.maze[i][j] & Direction.north.rawValue) == 0 {
-                           addWall(width: comprimentoPorUnidade-0.1, length: 0.1, xPos: topLeftPos.x + 0.5*comprimentoPorUnidade + Float(i)*comprimentoPorUnidade, zPos: topLeftPos.z + Float(j)*comprimentoPorUnidade)
-                       }
-                   }
-               }
-               addPillar(xPos: topLeftPos.x + larguraDoLabirinto, zPos: topLeftPos.z + Float(j)*comprimentoPorUnidade)
-               
-               // builds walls for left-edges of each maze-cell (if there is supposed to be a wall there)
-               for i in 0..<Int(larguraDoLabirinto/comprimentoPorUnidade) {
-                   if (oLabirinto.maze[i][j] & Direction.west.rawValue) == 0 {
-                       addWall(width: 0.1, length: comprimentoPorUnidade-0.1, xPos: topLeftPos.x + Float(i)*comprimentoPorUnidade, zPos: topLeftPos.z + 0.5*comprimentoPorUnidade + Float(j)*comprimentoPorUnidade)
-                   }
-               }
-               addWall(width: 0.1, length: comprimentoPorUnidade-0.1, xPos: topLeftPos.x + larguraDoLabirinto, zPos: topLeftPos.z + 0.5*comprimentoPorUnidade + Float(j)*comprimentoPorUnidade)
-           }
-           
-           // manually builds last row of walls since the row isn't auto-generated
-           for i in 0..<Int(larguraDoLabirinto/comprimentoPorUnidade) {
-               addPillar(xPos: topLeftPos.x + Float(i)*comprimentoPorUnidade, zPos: entradaDoLabirinto.z)
-               if i != (Int(larguraDoLabirinto/comprimentoPorUnidade)) / 2 { // ensures no wall is built where entrance is supposed to be
-                   addWall(width: comprimentoPorUnidade-0.1, length: 0.1, xPos: topLeftPos.x + 0.5*comprimentoPorUnidade + Float(i)*comprimentoPorUnidade, zPos: entradaDoLabirinto.z)
-               }
-           }
-           //Add maze finish block, currently at the entrance for checking
-           //addMazeFinish(width: 0.3, length: 0.3, xPos: mazeEntrance.x, zPos: mazeEntrance.z)
-           //Add maze finish to the exit
-//           addMazeFinish(width: 0.3, length: 0.3, xPos: entradaDoLabirinto.x, zPos: entradaDoLabirinto.z - comprimentoPorUnidade)
+                else if node == .backC {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothBackC)
+                } else if node == .bottom {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothBottom)
+                } else if node == .front {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothFront)
+                }  else if node == .left {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothLeft)
+                } else if node == .right {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothRight)
+                } else if node == .top {
+                    updateAntartidaWallPaper(node: node, with: .antartidaSmoothTop)
+                
+                }
+            }
+        }
+        
+  
+        func updateMilkyWayWallPaper() {
+            for node in PortalNodes.allCases {
+                if node == .backA {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayBackA)
+                } else if node == .backC {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayBackC)
+                } else if node == .bottom {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayBottom)
+                } else if node == .front {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayFront)
+                }  else if node == .left {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayLeft)
+                } else if node == .right {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayRight)
+                } else if node == .top {
+                    updateMilkyWayWallPaper(node: node, with: .milkyWayTop)
+                }
+            }
+        }
+
+        func updateAntartidaWallPaper(node: PortalNodes, with wallPaperName: Antartida) {
+            let child = portalNode?.childNode(withName: node.rawValue, recursively: true)
+            child?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "Portal.scnassets/\(wallPaperName.rawValue).png")
+            child?.renderingOrder = 200
+            if let mask = child?.childNode(withName: K.mask, recursively: false) {
+                mask.geometry?.firstMaterial?.transparency = 0.000001
+            }
+        }
 //
-//
-           
-           addPillar(xPos: topLeftPos.x + larguraDoLabirinto, zPos: entradaDoLabirinto.z)
-           
-           labirintoIsSetUp = true
-       }
-       
-       func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-           
-           if time > tempoDeEspera{
-               spawnObCheckNode()
-               currentlyOb = false
-      //         removeFallenObCheckNodes()
-               tempoDeEspera = time + TimeInterval(0.5)
-           }
-       }
-       
-       func renderer(_ renderer: SCNSceneRenderer, willRenderScene scene: SCNScene, atTime time: TimeInterval) {
-           if currentlyOb == true {
-               obWarningNode.opacity = 1
-           }
-           else {
-               obWarningNode.opacity = 0
-           }
-       }
-       
-       func spawnObCheckNode() {
-           let obCheckSphere = SCNSphere(radius: 0.02)
-           let obCheckNode = SCNNode(geometry: obCheckSphere)
-           obCheckNode.opacity = 0
-           
-           obCheckNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
-           obCheckNode.physicsBody?.categoryBitMask = CategoriaFísica.Camera
-           obCheckNode.physicsBody?.contactTestBitMask = CategoriaFísica.WallOrPillar
-           obCheckNode.physicsBody?.collisionBitMask = CategoriaFísica.None
-           
-           obCheckNode.position = SCNVector3Make(0, 0, 0)
-           sceneView.pointOfView?.addChildNode(obCheckNode)
-       }
-       
-        
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
+        func updateMilkyWayWallPaper(node: PortalNodes, with wallPaperName: MilkyWay) {
+            let child = portalNode?.childNode(withName: node.rawValue, recursively: true)
+            child?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "Portal.scnassets/\(wallPaperName.rawValue).png")
+            child?.renderingOrder = 200
+            if let mask = child?.childNode(withName: K.mask, recursively: false) {
+                mask.geometry?.firstMaterial?.transparency = 0.000001
+            }
+        }
 
-        // Run the view's session
-        sceneView.session.run(configuration)
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // Pause the view's session
-        sceneView.session.pause()
-    }
-       func addPillar(xPos: Float, zPos: Float) {
-           let pillar = SCNBox(width: 0.1, height: CGFloat(alturaDoLabirinto), length: 0.1, chamferRadius: 0)
-           
-           // adicionando a textura para cada pilar
-           let pillarTexture = UIImage(named: "paredeRosa")
-           let pillarMaterial = SCNMaterial()
-           pillarMaterial.diffuse.contents = pillarTexture
-           pillarMaterial.isDoubleSided = true
-           pillar.materials = [pillarMaterial]
-           
-           let pillarNode = SCNNode()
-           pillarNode.geometry = pillar
-           pillarNode.position = SCNVector3(xPos, entradaDoLabirinto.y + (alturaDoLabirinto/2), zPos)
-           
-           sceneView.scene.rootNode.addChildNode(pillarNode)
-       }
-    
-    func addWall(width: Float, length: Float, xPos: Float, zPos: Float) {
-        let wall = SCNBox(width: CGFloat(width), height: CGFloat(alturaDoLabirinto), length: CGFloat(length), chamferRadius: 0)
-        
-        // textura para a parede
-        let wallTexture = UIImage(named: "paredeRosa")
-        let wallMaterial = SCNMaterial()
-        wallMaterial.diffuse.contents = wallTexture
-        wallMaterial.isDoubleSided = true
-        wall.materials = [wallMaterial]
 
-        let wallNode = SCNNode()
-        wallNode.geometry = wall
-        
-        wallNode.physicsBody = SCNPhysicsBody(type: .static, shape: nil)
-        wallNode.physicsBody?.categoryBitMask = CategoriaFísica.WallOrPillar
-        wallNode.physicsBody?.contactTestBitMask = CategoriaFísica.Camera
-        wallNode.physicsBody?.collisionBitMask = CategoriaFísica.None
-        
-        wallNode.position = SCNVector3(xPos, entradaDoLabirinto.y + (alturaDoLabirinto/2), zPos)
+    //MARK: Environment Enums
+    enum MilkyWay: String, CaseIterable {
+        case milkyWayBackA
+        case milkyWayBackC
+        case milkyWayBottom
+        case milkyWayFront
+        case milkyWayLeft
+        case milkyWayRight
+        case milkyWayTop
+    }
 
-        sceneView.scene.rootNode.addChildNode(wallNode)
-    }
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        // Present an error message to the user
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        // Inform the user that the session has been interrupted, for example, by presenting an overlay
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        // Reset tracking and/or remove existing anchors if consistent tracking is required
-    }
-}
 
-extension float4x4 {
-    var translation:  SIMD3<Float> {
-        let translation = self.columns.3
-        return SIMD3<Float>(translation.x, translation.y, translation.z)
+    enum Antartida: String, CaseIterable {
+        case antartidaSmoothBackA
+        case antartidaSmoothBackC
+        case antartidaSmoothBottom
+        case antartidaSmoothFront
+        case antartidaSmoothLeft
+        case antartidaSmoothRight
+        case antartidaSmoothTop
     }
-}
+
+    enum PortalNodes: String, CaseIterable {
+        case top
+        case front
+        case bottom
+        case left
+        case right
+        case backA
+        case backB
+        case backC
+    }

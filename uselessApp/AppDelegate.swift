@@ -11,30 +11,47 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+        var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        return true
-    }
+        func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+            
+            //To display onboarding
+            window = UIWindow(frame: UIScreen.main.bounds)
+            let storyboard = UIStoryboard(name: K.main, bundle: nil)
+            var viewController: UIViewController
+            
+//            if (UserDefaults.standard.value(forKey: K.onboardScreenShown) as? String) == nil {
+//                viewController = storyboard.instantiateViewController(withIdentifier: K.onboardingViewController)
+//            } else {
+                viewController = storyboard.instantiateInitialViewController()!
+         //   }
+            window?.rootViewController = viewController
+            window?.makeKeyAndVisible()
+                    
+            return true
+        }
 
-    func applicationWillResignActive(_ application: UIApplication) {
+        func applicationWillResignActive(_ application: UIApplication) {
+        
+        }
 
-    }
+        func applicationDidEnterBackground(_ application: UIApplication) {
+       
+        }
 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-      
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
+        func applicationWillEnterForeground(_ application: UIApplication) {
     
+        }
+
+        func applicationDidBecomeActive(_ application: UIApplication) {
+         
+        }
+
+        func applicationWillTerminate(_ application: UIApplication) {
+
+        }
+
+
     }
-
-
-}
 
