@@ -72,7 +72,7 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
             
         //MARK: Start Music
         func startMusic() {
-            let soundURL = Bundle.main.url(forResource: K.ambient, withExtension: K.mp3 )
+            let soundURL = Bundle.main.url(forResource: K.background, withExtension: K.mp3 )
             do {
                 audioPlayer = try AVAudioPlayer(contentsOf: soundURL!)
                 audioPlayer?.numberOfLoops = -1
@@ -155,16 +155,13 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
                     updateAntartidaWallPaper(node: node, with: .antartidaSmoothRight)
                 } else if node == .top {
                     updateAntartidaWallPaper(node: node, with: .antartidaSmoothTop)
-                
                 }
             }
         }
         
-  
         func updateBeachWallPaper() {
             for node in PortalNodes.allCases {
                 if node == .backA {
-                  
                     updateBeachWallPaper(node: node, with: .beachBackA)
                 } else if node == .backC {
                     updateBeachWallPaper(node: node, with: .beachBackC)
@@ -199,7 +196,6 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
                 mask.geometry?.firstMaterial?.transparency = 0.000001
             }
         }
-
     }
 
     //MARK: Environment Enums
@@ -212,7 +208,6 @@ class ViewController: UIViewController,ARSCNViewDelegate, AVAudioPlayerDelegate 
         case beachRight
         case beachTop
     }
-
 
     enum Antartida: String, CaseIterable {
         case antartidaSmoothBackA

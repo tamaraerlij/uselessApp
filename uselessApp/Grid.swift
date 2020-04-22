@@ -39,7 +39,7 @@ class Grid : SCNNode {
         planeGeometry = SCNPlane(width: CGFloat(self.anchor.extent.x), height: CGFloat(self.anchor.extent.z))
         
         let material = SCNMaterial()
-        material.diffuse.contents = UIImage(named:"Portal.scnassets/overlay_grid.png")
+        material.diffuse.contents = UIImage(named:"Portal.scnassets/cliqueAqui2.png")
         
         planeGeometry.materials = [material]
         let planeNode = SCNNode(geometry: self.planeGeometry)

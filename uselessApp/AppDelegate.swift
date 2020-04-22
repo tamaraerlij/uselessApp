@@ -21,6 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let storyboard = UIStoryboard(name: K.main, bundle: nil)
             var viewController: UIViewController
             
+            // Utilizar quando a parte de Onboarding estiver finalizada
 //            if (UserDefaults.standard.value(forKey: K.onboardScreenShown) as? String) == nil {
 //                viewController = storyboard.instantiateViewController(withIdentifier: K.onboardingViewController)
 //            } else {
@@ -51,7 +52,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         func applicationWillTerminate(_ application: UIApplication) {
 
         }
-
-
     }
 
